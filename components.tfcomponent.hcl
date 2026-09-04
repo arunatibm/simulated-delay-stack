@@ -50,6 +50,7 @@ component "delay_gate" {
 
   inputs = {
     trigger = component.pet.name
+    delay_time = var.delay_time
   }
 
   providers = {
