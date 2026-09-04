@@ -1,7 +1,7 @@
 deployment "main" {
   inputs = {
     delay_time = "30s"
-    prefix = main
+    prefix = "main"
     instances = 1
   }
 }
