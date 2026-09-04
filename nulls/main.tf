@@ -19,7 +19,7 @@ variable "instances" {
 }
 
 variable "delay_dependency" {
-  type = bool
+  type = string
 }
 
 resource "null_resource" "this" {
