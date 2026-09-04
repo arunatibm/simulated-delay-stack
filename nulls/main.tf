@@ -26,7 +26,8 @@ resource "null_resource" "this" {
   count = var.instances
 
   triggers = {
-    pet = var.pet
+    pet   = var.pet
+    delay = var.delay_dependency
   }
 }
 
