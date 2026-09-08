@@ -1,6 +1,6 @@
 deployment "main" {
   inputs = {
-    delay_time = "90s"
+    delay_time = "1000s"
     prefix = "main"
     instances = 1
   }
