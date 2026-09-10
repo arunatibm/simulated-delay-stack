@@ -1,73 +1,28 @@
-# Copyright IBM Corp. 2014, 2026
-
-variable "prefix" {
-  type = string
+# Define the input variable that the deployment file will supply
+variable "deployment_uuid" {
+  type        = string
+  description = "The automated unique execution ID supplied by the Stacks runner."
 }
 
-variable "instances" {
-  type = number
+variable "sleep_duration" {
+  type        = string
+  default     = "60s"
+  description = "Customizable time window for the stack to sleep."
 }
 
-variable "delay_time" {
-  type = string
-}
-
-required_providers {
-  random = {
-    source  = "hashicorp/random"
-    version = "~> 3.5.1"
-  }
-
-  null = {
-    source  = "hashicorp/null"
-    version = "~> 3.2.2"
-  }
-
-  time = {
-    source = "hashicorp/time"
-    version = "~> 0.14.1"
-  }
-}
-
-provider "random" "this" {}
-provider "null" "this" {}
-provider "time" "this" {}
-
-component "pet" {
-  source = "./pet"
+# Instantiate the standalone delay component
+component "timer" {
+  source = "./modules/delay"
 
   inputs = {
-    prefix = var.prefix
-  }
-
-  providers = {
-    random = provider.random.this
+    run_trigger = var.deployment_uuid
+    duration    = var.sleep_duration
   }
 }
 
-component "delay_gate" {
-  source = "./delay"
-
-  inputs = {
-    trigger = component.pet.name
-    delay_time = var.delay_time
-  }
-
-  providers = {
-    time = provider.time.this
-  }
-}
-
-component "nulls" {
-  source = "./nulls"
-
-  inputs = {
-    pet       = component.pet.name
-    instances = var.instances
-    delay_dependency = component.delay_gate.ready
-  }
-
-  providers = {
-    null = provider.null.this
-  }
+# Expose the component output at the Stack level
+output "timer_status" {
+  type        = string
+  value       = component.timer.status
+  description = "The final status of the standalone sleep run."
 }
