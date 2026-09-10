@@ -31,5 +31,6 @@ component "timer" {
 }
 
 output "timer_status" {
+  type = string
   value = component.timer.status
 }
