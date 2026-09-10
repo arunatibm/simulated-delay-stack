@@ -1,3 +1,14 @@
+required_providers {
+  time = {
+    source = "hashicorp/time"
+    version = "~> 0.14.1"
+  }
+}
+
+provider "time" "default" {
+  # Configuration options go here if needed
+}
+
 # Define the input variable that the deployment file will supply
 variable "deployment_uuid" {
   type        = string
@@ -13,6 +24,10 @@ variable "sleep_duration" {
 # Instantiate the standalone delay component
 component "timer" {
   source = "./modules/delay"
+
+  providers = {
+    time = provider.time.default
+  }
 
   inputs = {
     run_trigger = var.deployment_uuid
