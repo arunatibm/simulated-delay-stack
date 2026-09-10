@@ -1,43 +1,35 @@
 required_providers {
   time = {
-    source = "hashicorp/time"
+    source  = "hashicorp/time"
     version = "~> 0.14.1"
   }
 }
 
-provider "time" "default" {
-  # Configuration options go here if needed
-}
-
-# Define the input variable that the deployment file will supply
-variable "deployment_uuid" {
-  type        = string
-  description = "The automated unique execution ID supplied by the Stacks runner."
-}
+provider "time" "default" {}
 
 variable "sleep_duration" {
-  type        = string
-  default     = "60s"
-  description = "Customizable time window for the stack to sleep."
+  type    = string
+  default = "60s"
 }
 
-# Instantiate the standalone delay component
+variable "force_rerun_id" {
+  type    = string
+  default = "default-run"
+}
+
 component "timer" {
   source = "./modules/delay"
+
+  inputs = {
+    duration = var.sleep_duration
+    run_id   = var.force_rerun_id
+  }
 
   providers = {
     time = provider.time.default
   }
-
-  inputs = {
-    run_trigger = var.deployment_uuid
-    duration    = var.sleep_duration
-  }
 }
 
-# Expose the component output at the Stack level
 output "timer_status" {
-  type        = string
-  value       = component.timer.status
-  description = "The final status of the standalone sleep run."
+  value = component.timer.status
 }

@@ -1,9 +1,6 @@
-# Define the target deployment environment (e.g., development)
 deployment "development" {
   inputs = {
-    # context.deployment.id is built natively into Terraform Stacks 
-    # and updates automatically with every new orchestrator run.
-    deployment_uuid = uuid()
-    sleep_duration  = "60s"
+    sleep_duration = "60s"
+    force_rerun_id = "run-1" # Increment this string (e.g., "run-2") whenever you want to force a manual rerun
   }
 }
